@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "od-design-system-project/v1",
+  "id": "porchlight",
+  "name": "SafeTreat Porchlight",
+  "category": "Editorial",
+  "description": "Light, warm, magazine-like SafeTreat look for daytime planning: paper background, Fraunces headlines, terracotta accent. Derived from OpenDesign's warm-editorial package.",
+  "source": { "type": "user", "origin": "SafeTreat, adapted from OpenDesign design-systems/warm-editorial" },
+  "files": { "design": "DESIGN.md", "tokens": "tokens.css" }
+}

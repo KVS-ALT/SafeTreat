@@ -1,0 +1,59 @@
+/* design-systems/nightfall/tokens.css — SafeTreat default design. */
+:root,
+[data-theme="nightfall"] {
+  --bg: #09090c;
+  --bg-pattern: radial-gradient(900px 520px at 85% -12%, rgba(242, 118, 46, 0.1), transparent 62%);
+  --surface: #111116;
+  --surface-2: #18181f;
+  --border: rgba(255, 255, 255, 0.07);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --border-w: 1px;
+  --text: #f4f4f6;
+  --muted: #9a9aa6;
+  --accent: #f2762e;
+  --accent-text: #ff9a5c;
+  --accent-ink: #170a02;
+  --danger: #f0525f;
+  --warn: #f5a524;
+  --safe: #3fcf8e;
+  --gold: #e8c15a;
+  --teal: #3cc7c1;
+
+  --r-lg: 14px;
+  --r-md: 10px;
+  --r-sm: 7px;
+  --r-pill: 999px;
+  --clip: none;
+  --sh-card: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 18px 40px -20px rgba(0, 0, 0, 0.7);
+  --sh-btn: none;
+  --sh-btn-hover: 0 8px 20px -10px rgba(242, 118, 46, 0.55);
+  --lift: translateY(-1px);
+  --press: scale(0.98);
+
+  --ff-display: var(--font-geist), system-ui, sans-serif;
+  --ff-body: var(--font-geist), system-ui, sans-serif;
+  --ff-label: var(--font-geist), system-ui, sans-serif;
+  --ff-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --display-weight: 600;
+  --display-tracking: -0.035em;
+  --display-case: none;
+  --display-scale: 1;
+  --label-case: uppercase;
+  --label-tracking: 0.06em;
+  --label-size: 11px;
+
+  --frame-border: 1px solid rgba(255, 255, 255, 0.08);
+  --frame-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.8);
+  --frame-radius: 16px;
+  --frame-pad: 0px;
+  --frame-clip: none;
+  --frame-bg: #16161c;
+  --map-bg: #16161c;
+  --tile-filter: invert(1) hue-rotate(180deg) brightness(0.8) contrast(0.95) saturate(0.2);
+  --tile-rendering: auto;
+
+  --scanlines: none;
+  --icon-line: inline-block;
+  --icon-pixel: none;
+  color-scheme: dark;
+}

@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "od-design-system-project/v1",
+  "id": "nightfall",
+  "name": "SafeTreat Nightfall",
+  "category": "Productivity & SaaS",
+  "description": "Default SafeTreat look: precise near-black surfaces, hairline borders and a single pumpkin accent. Derived from OpenDesign's linear-app package.",
+  "source": { "type": "user", "origin": "SafeTreat, adapted from OpenDesign design-systems/linear-app" },
+  "files": { "design": "DESIGN.md", "tokens": "tokens.css" }
+}

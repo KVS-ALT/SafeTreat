@@ -1,0 +1,58 @@
+/* design-systems/porchlight/tokens.css */
+[data-theme="porchlight"] {
+  --bg: #f7f2ea;
+  --bg-pattern: none;
+  --surface: #fffdf9;
+  --surface-2: #f0e9dd;
+  --border: rgba(28, 26, 23, 0.1);
+  --border-strong: rgba(28, 26, 23, 0.22);
+  --border-w: 1px;
+  --text: #1c1a17;
+  --muted: #6f675f;
+  --accent: #c0512f;
+  --accent-text: #a8411f;
+  --accent-ink: #fffaf3;
+  --danger: #b42318;
+  --warn: #b45309;
+  --safe: #2f7d5b;
+  --gold: #a8790f;
+  --teal: #237a73;
+
+  --r-lg: 16px;
+  --r-md: 12px;
+  --r-sm: 8px;
+  --r-pill: 999px;
+  --clip: none;
+  --sh-card: none;
+  --sh-btn: none;
+  --sh-btn-hover: 0 2px 16px rgba(28, 26, 23, 0.1);
+  --lift: translateY(-2px);
+  --press: translateY(0) scale(0.99);
+
+  --ff-display: var(--font-fraunces), Georgia, serif;
+  --ff-body: var(--font-dm-sans), system-ui, sans-serif;
+  --ff-label: var(--font-dm-sans), system-ui, sans-serif;
+  --ff-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --display-weight: 600;
+  --display-tracking: -0.02em;
+  --display-case: none;
+  --display-scale: 1.04;
+  --label-case: none;
+  --label-tracking: 0.02em;
+  --label-size: 12.5px;
+
+  --frame-border: 1px solid rgba(28, 26, 23, 0.12);
+  --frame-shadow: 0 2px 0 rgba(28, 26, 23, 0.04);
+  --frame-radius: 18px;
+  --frame-pad: 0px;
+  --frame-clip: none;
+  --frame-bg: #efe8dc;
+  --map-bg: #efe8dc;
+  --tile-filter: sepia(0.22) saturate(0.7) brightness(1.02);
+  --tile-rendering: auto;
+
+  --scanlines: none;
+  --icon-line: inline-block;
+  --icon-pixel: none;
+  color-scheme: light;
+}

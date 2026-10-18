@@ -1,0 +1,58 @@
+/* design-systems/candy/tokens.css */
+[data-theme="candy"] {
+  --bg: #fff4d6;
+  --bg-pattern: radial-gradient(rgba(29, 27, 38, 0.12) 1px, transparent 1.2px) 0 0 / 16px 16px;
+  --surface: #fffdf6;
+  --surface-2: #ffeebd;
+  --border: #1d1b26;
+  --border-strong: #1d1b26;
+  --border-w: 2px;
+  --text: #1d1b26;
+  --muted: #5a5568;
+  --accent: #ff8a1f;
+  --accent-text: #c2410c;
+  --accent-ink: #1d1b26;
+  --danger: #e5383b;
+  --warn: #d97706;
+  --safe: #1f9d55;
+  --gold: #b8860b;
+  --teal: #0f9488;
+
+  --r-lg: 14px;
+  --r-md: 10px;
+  --r-sm: 8px;
+  --r-pill: 999px;
+  --clip: none;
+  --sh-card: 4px 4px 0 #1d1b26;
+  --sh-btn: 3px 3px 0 #1d1b26;
+  --sh-btn-hover: 5px 5px 0 #1d1b26;
+  --lift: translate(-2px, -2px);
+  --press: translate(3px, 3px);
+
+  --ff-display: var(--font-bricolage), system-ui, sans-serif;
+  --ff-body: var(--font-space-grotesk), system-ui, sans-serif;
+  --ff-label: var(--font-space-grotesk), system-ui, sans-serif;
+  --ff-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --display-weight: 800;
+  --display-tracking: -0.03em;
+  --display-case: none;
+  --display-scale: 1;
+  --label-case: uppercase;
+  --label-tracking: 0.05em;
+  --label-size: 11.5px;
+
+  --frame-border: 2px solid #1d1b26;
+  --frame-shadow: 6px 6px 0 #1d1b26;
+  --frame-radius: 16px;
+  --frame-pad: 0px;
+  --frame-clip: none;
+  --frame-bg: #f3ead1;
+  --map-bg: #f3ead1;
+  --tile-filter: saturate(1.15) contrast(1.03);
+  --tile-rendering: auto;
+
+  --scanlines: none;
+  --icon-line: inline-block;
+  --icon-pixel: none;
+  color-scheme: light;
+}

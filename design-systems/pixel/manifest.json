@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "od-design-system-project/v1",
+  "id": "pixel",
+  "name": "SafeTreat Pixel Patrol",
+  "category": "Retro & Nostalgic",
+  "description": "8-bit handheld-tracker SafeTreat look: navy CRT screen in a stepped blue bezel, pixel fonts, pixel icons and scanlines. Built from OpenDesign's retro and dithered packages, inspired by spideytracker.net.",
+  "source": { "type": "user", "origin": "SafeTreat, adapted from OpenDesign design-systems/retro + dithered; visual reference spideytracker.net" },
+  "files": { "design": "DESIGN.md", "tokens": "tokens.css" }
+}

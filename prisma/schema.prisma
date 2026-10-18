@@ -1,0 +1,125 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// SQLite has no enums or JSON columns, so enums are strings and lists are JSON text.
+
+model User {
+  id             String   @id @default(cuid())
+  username       String   @unique
+  passwordHash   String
+  role           String   @default("PARENT") // PARENT | HOMEOWNER
+  childAllergens String   @default("[]")      // JSON string[] of allergen codes
+  createdAt      DateTime @default(now())
+
+  houses  House[]
+  trips   Trip[]
+  alerts  Alert[]
+  reports Report[]
+}
+
+model House {
+  id                          String    @id @default(cuid())
+  ownerId                     String
+  owner                       User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  displayName                 String
+  legalName                   String
+  address                     String
+  lat                         Float
+  lng                         Float
+  candies                     String    @default("[]") // JSON {name, wrapped, homemade}[]
+  allergenFree                String    @default("[]") // JSON string[] of allergen codes
+  nonFoodTreats               Boolean   @default(false)
+  hoursStart                  String    @default("17:00")
+  hoursEnd                    String    @default("20:30")
+  active                      Boolean   @default(true)
+  verificationStatus          String    @default("UNVERIFIED") // UNVERIFIED | PENDING | VERIFIED | FAILED
+  verificationNote            String?
+  verifiedName                String?
+  addressMatchesId            Boolean   @default(false)
+  verificationMethod          String?   // "gemma-id-read"
+  idDocumentType              String?   // e.g. "Ontario driver's licence" (never the image or ID number)
+  verificationAttempts        Int       @default(0)
+  verificationWindowStart     DateTime?
+  verifiedAt                  DateTime?
+  safetyFlag                  String    @default("OK") // OK | REPORTED
+  createdAt                   DateTime  @default(now())
+
+  @@index([lat, lng])
+}
+
+model Report {
+  id               String    @id @default(cuid())
+  type             String    // CANDY | INCIDENT
+  title            String
+  description      String
+  lat              Float
+  lng              Float
+  placeName        String
+  candyDescription String?
+  severity         Int       @default(3)
+  category         String    @default("other")
+  aiSummary        String    @default("")
+  aiFlaggedSpam    Boolean   @default(false)
+  aiSource         String    @default("fallback") // gemma | fallback
+  status           String    @default("ACTIVE") // ACTIVE | HIDDEN
+  reporterId       String?
+  reporter         User?     @relation(fields: [reporterId], references: [id], onDelete: SetNull)
+  occurredAt       DateTime  @default(now())
+  createdAt        DateTime  @default(now())
+  expiresAt        DateTime?
+
+  alerts Alert[]
+
+  @@index([lat, lng])
+}
+
+model Trip {
+  id           String    @id @default(cuid())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name         String
+  plannedRoute String    @default("null") // JSON GeoJSON LineString
+  waypoints    String    @default("[]")   // JSON {lat, lng, label, houseId?}[]
+  status       String    @default("PLANNED") // PLANNED | ACTIVE | DONE
+  startedAt    DateTime?
+  endedAt      DateTime?
+  createdAt    DateTime  @default(now())
+
+  points TrackPoint[]
+  alerts Alert[]
+}
+
+model TrackPoint {
+  id         String   @id @default(cuid())
+  tripId     String
+  trip       Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  lat        Float
+  lng        Float
+  recordedAt DateTime
+
+  @@index([lat, lng])
+  @@index([tripId])
+}
+
+model Alert {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tripId    String
+  trip      Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  reportId  String
+  report    Report   @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  distanceM Float
+  passedAt  DateTime
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@unique([tripId, reportId])
+}

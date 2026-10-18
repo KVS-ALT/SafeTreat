@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "od-design-system-project/v1",
+  "id": "candy",
+  "name": "SafeTreat Candy Shop",
+  "category": "Bold & Expressive",
+  "description": "Playful neobrutalist SafeTreat look: cream background, 2px ink outlines, hard offset shadows and a pumpkin accent. Derived from OpenDesign's neobrutalism package.",
+  "source": { "type": "user", "origin": "SafeTreat, adapted from OpenDesign design-systems/neobrutalism" },
+  "files": { "design": "DESIGN.md", "tokens": "tokens.css" }
+}
