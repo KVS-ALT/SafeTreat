@@ -19,9 +19,13 @@ async function myHouse(userId: string) {
 export const GET = handler(async () => {
   const user = await requireUser("HOMEOWNER");
   const h = await myHouse(user.id);
+  const demoSamples = process.env.ID_CHECK_ALLOW_SAMPLES === "true";
   return NextResponse.json({
     status: h.verificationStatus, note: h.verificationNote, verifiedName: h.verifiedName, idDocumentType: h.idDocumentType,
     available: gemmaStatus().provider !== "none",
+    // Demo mode only: the owner's own name/address, so the page can draw a matching SAMPLE card.
+    demoSamples,
+    sample: demoSamples ? { name: h.legalName, address: h.address } : null,
   });
 });
 

@@ -31,7 +31,8 @@ const Body = z.object({
   occurredAt: z.string().datetime().optional(),
 });
 
-const INCIDENT_TTL_MS = 6 * 3600 * 1000;
+/** Incidents (traffic, a loose dog…) fade from the map after this long; candy reports stay. */
+const INCIDENT_TTL_MS = Number(process.env.INCIDENT_TTL_HOURS ?? 6) * 3600 * 1000;
 
 export const POST = handler(async (req: Request) => {
   const body = Body.parse(await req.json());

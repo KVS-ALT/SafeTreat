@@ -58,18 +58,36 @@ Hosted Gemma can take up to a minute under load, so it never sits in a user's re
 
 ## 2-minute demo
 
-1. **Safety map** (`/`): seeded candy reports 🍬 and incidents ⚠️ with shaded danger zones, plus registered houses (gold ring = ID-verified, teal dot = non-food treats).
+1. **Safety map** (`/`): seeded candy reports 🍬 and incidents ⚠️ with shaded danger zones, plus registered houses (gold ring = ID checked, teal dot = non-food treats).
 2. Log in as `demo` → **Plan a route**. Tap the map to set home and press **Plan safe route** under "Suggest for me". The route follows real streets. Houses with Reese's/Snickers are faded (peanut allergy), and houses inside danger zones or with reports are skipped. Each skip comes with a reason.
-3. **Save trip** → **🎬 Simulate walk** replays the route as GPS points and finishes the trip.
+3. **Save trip** → **Simulate walk** replays the route as GPS points and finishes the trip.
 4. In a private window, **Report** unsafe candy at one of the houses on that route.
-5. Back as `demo`, the 🔔 badge lights up within 30 s. The alert says where and when you passed, what to look for and what to do.
-6. Log in as `demo-home` → **My house**. Tick "Peanuts" as avoided while listing Reese's, and the save is blocked with a warning. Then **Check my ID**: with `ID_CHECK_ALLOW_SAMPLES=true`, a card that says SAMPLE with the name Maria Garcia passes.
+5. Back as `demo`, the bell badge lights up within 30 s. The alert says where and when you passed, what to look for and what to do.
+6. Log in as `demo-home` → **My house**. Tick "Peanuts" as avoided while listing Reese's, and the save is blocked with a warning. Then **Check my ID**: with `ID_CHECK_ALLOW_SAMPLES=true`, press **Use the sample ID** (a card marked SAMPLE with the homeowner's own name and address) and submit.
 7. Under any planned route, **Local news near this route** lists recent incidents reported on those streets (often none).
+
+## Demo day
+
+1. **Stop any running dev server**, then run `npm run demo`. It applies migrations, reseeds, builds and starts a production server on http://localhost:3000. Pages load instantly, with no compiling on first visit. Reseeding resets the ID check for `demo-home` and the parent's allergies (Peanuts). Seeded incidents last 48 h, so seed the same day.
+2. In a second terminal, about 10 minutes before you start, run `npm run warmup`. It loads every page, plans a route (warming the routing and news caches) and times one Gemma call:
+   - **Gemma responsive:** good to go.
+   - **Gemma slow:** the ID check and news can take up to a minute; run the ID check early or have a screenshot ready.
+   - **Gemma not answering:** reports, news and alerts fall back to keywords and templates, and the ID check says it's unavailable.
+   - For an AI that can't be rate-limited, run Gemma locally: `ollama pull gemma3`, then set `GEMMA_PROVIDER="ollama"`.
+3. **Internet is required** for map tiles (OpenStreetMap), routing (FOSSGIS Valhalla), news (Google News) and Gemma. Test on the venue Wi-Fi and keep a phone hotspot as backup.
+4. Set `ID_CHECK_ALLOW_SAMPLES="true"` in `.env` so the ID check works with the built-in sample card.
+5. Log in as `demo` and **allow browser notifications** on the Alerts page so the pop-up alert appears during the demo.
+6. Use **Simulate walk** rather than real GPS. Real tracking needs HTTPS when the app is opened from a phone.
+7. Pick the design first from the palette menu; `/designs` makes a good opening slide.
+8. Keep `.env` off screen; it holds your Gemini key.
+9. Optional: screen-record one full run (report → plan → simulate → alert → ID check) as a backup.
+
+If pages start returning 404 or login bounces back to the form while using `npm run dev`, the dev cache is stale (usually after switching git branches with the server running). Stop the server, `rm -rf .next`, and start it again.
 
 ## How it works
 
 - `src/lib/matching.ts`: a trip "passed" a report if any GPS point **or the segment between two points** came within 50 m, from 3 days before to 12 h after the reported time. Runs both ways: when a candy report is posted (checks all recorded tracks) and when a trip finishes (checks existing reports). `unique(tripId, reportId)` prevents duplicate alerts.
-- `src/lib/dangerZones.ts`: each active report becomes a circle: candy reports cover the house and its neighbours (35–55 m), incidents cover the street (60 m at severity 1 up to 140 m at 5). Incidents expire after 6 h; candy reports stay.
+- `src/lib/dangerZones.ts`: each active report becomes a circle: candy reports cover the house and its neighbours (35–55 m), incidents cover the street (60 m at severity 1 up to 140 m at 5). New incidents expire after `INCIDENT_TTL_HOURS` (default 6 h; seeded ones last 48 h); candy reports stay.
 - `src/lib/routing.ts`: with an ORS key, OpenRouteService `foot-walking` with `avoid_polygons`. Without one, the free FOSSGIS Valhalla pedestrian router routes on OpenStreetMap with the zones passed as `exclude_polygons` and driveways/alleys/service roads penalized, so kids stay on streets and sidewalks. If Valhalla is down, the FOSSGIS OSRM foot router is used per leg, retrying via detour points around any zone and keeping the route with the least exposure (depth × severity, plus distance). The planner shows a visible warning if it ever has to fall back to straight lines. Stops inside a zone are dropped and explained; straight lines are only a last resort if no router answers.
 - `src/lib/houses.ts`: house suggestions are filtered by active/open hours, safety flag, danger zones, allergens (teal-pumpkin houses count as safe) and the verified-only toggle. They are then scored (verified +3, teal +1, fully wrapped +1, minus distance) and ordered as a nearest-neighbour loop.
 - `src/lib/identity.ts` + `readIdDocument` in `gemma.ts`: the homeowner uploads a photo of their ID. Gemma (vision) reads the document type, name, expiry and address, and is told not to return the ID number or birth date. Plain code then decides: readable government photo ID, not a sample (unless demo mode), not expired, name matches the legal name. The image only lives in memory for that request and is never saved or logged; 5 attempts per day. This is an AI document read, not bank-grade identity verification: it can't detect forgeries or confirm the uploader is the person on the card, so the badge says "ID checked".
@@ -84,6 +102,8 @@ npm test          # unit tests (matching, planner rules, name matching, Gemma pa
 npm run lint
 npm run build
 npm run db:seed   # reset demo data
+npm run demo      # reseed + production build + start on :3000
+npm run warmup    # pre-demo check: pages, routing, news, Gemma latency
 ```
 
 ## Limits (it's a hackathon demo)

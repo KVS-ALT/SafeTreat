@@ -12,6 +12,7 @@ import { haversine } from "../src/lib/geo";
 import { valhallaRoute } from "../src/lib/routing";
 
 const db = new PrismaClient();
+const SEED_INCIDENT_TTL_H = Number(process.env.SEED_INCIDENT_TTL_HOURS ?? 48);
 type Spot = { address: string; lat: number; lng: number; street: string };
 const spots: Spot[] = JSON.parse(readFileSync(join(__dirname, "seed-houses.json"), "utf8"));
 
@@ -151,7 +152,8 @@ async function main() {
     await db.report.create({
       data: {
         ...data, aiSource: "gemma", occurredAt: ago(minutesAgo), createdAt: ago(minutesAgo),
-        expiresAt: r.type === "INCIDENT" ? new Date(Date.now() + 6 * 3600000) : null,
+        // 48 h, so data seeded in the morning still shows at an evening demo.
+        expiresAt: r.type === "INCIDENT" ? new Date(Date.now() + SEED_INCIDENT_TTL_H * 3600000) : null,
       },
     });
     if (flag) await db.house.update({ where: { id: flag.id }, data: { safetyFlag: "REPORTED" } });

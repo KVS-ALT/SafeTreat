@@ -5,8 +5,10 @@ import Icon from "@/components/Icon";
 import Loading from "@/components/Loading";
 import { useRequireMe } from "@/components/useMe";
 import { api } from "@/lib/client";
+import { drawSampleId } from "@/lib/sampleId";
 
-type St = { status: "UNVERIFIED" | "PENDING" | "VERIFIED" | "FAILED"; note: string | null; verifiedName: string | null; idDocumentType: string | null; available: boolean };
+type St = { status: "UNVERIFIED" | "PENDING" | "VERIFIED" | "FAILED"; note: string | null; verifiedName: string | null; idDocumentType: string | null; available: boolean;
+  demoSamples: boolean; sample: { name: string; address: string } | null };
 type Result = { status: "VERIFIED" | "FAILED"; note: string | null; verifiedName: string | null; checks: { label: string; ok: boolean }[]; attemptsLeft: number };
 
 export default function VerifyPage() {
@@ -27,6 +29,20 @@ export default function VerifyPage() {
     setResult(null);
     setFile(f);
     setPreview(f ? URL.createObjectURL(f) : null);
+  }
+
+  async function applySample(download: boolean) {
+    if (!st?.sample) return;
+    const f = await drawSampleId(st.sample.name, st.sample.address);
+    if (download) {
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(f);
+      a.download = f.name;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    } else {
+      pick(f);
+    }
   }
 
   async function submit() {
@@ -76,6 +92,15 @@ export default function VerifyPage() {
 
         {st.status !== "VERIFIED" && st.available && (
           <div className="space-y-3">
+            {st.demoSamples && st.sample && (
+              <div className="well space-y-2 border border-accent p-3 text-sm" style={{ borderWidth: "var(--border-w)" }}>
+                <p><b>Demo mode:</b> no real ID needed. Use a card marked SAMPLE with your house&apos;s name and address.</p>
+                <div className="flex flex-wrap gap-2">
+                  <button type="button" className="btn-ghost !min-h-0 !py-1.5" onClick={() => applySample(false)}><Icon name="sparkle" size={14} /> Use the sample ID</button>
+                  <button type="button" className="btn-quiet !min-h-0 !py-1.5" onClick={() => applySample(true)}>Download it</button>
+                </div>
+              </div>
+            )}
             <label className="label" htmlFor="idphoto">Photo of your ID</label>
             <input id="idphoto" type="file" accept="image/jpeg,image/png,image/webp" capture="environment"
               onChange={(e) => pick(e.target.files?.[0] ?? null)}
